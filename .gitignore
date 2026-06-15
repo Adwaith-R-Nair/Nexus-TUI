@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Environment variables — NEVER push API keys
+.env
+.env.local
+.env*.local
+
+# Bun
+bun.lock
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/

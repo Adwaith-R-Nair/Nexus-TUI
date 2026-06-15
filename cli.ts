@@ -4,8 +4,8 @@ import { agentCommand } from './commands/agent';
 import { providerCommand } from './commands/providers';
 
 program
-  .name('opencode')
-  .description('Coding agent cli')
+  .name('nexus')
+  .description('Your multi-provider AI powerhouse in the terminal')
   .version('0.1.0')
   .addCommand(modelsCommand)
   .addCommand(agentCommand)
