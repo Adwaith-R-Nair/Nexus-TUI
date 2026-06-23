@@ -47,11 +47,3 @@ export function writeCredentials(credentials: NexusCredentials) {
   ensureConfigDir();
   writeFileSync(CREDENTIALS_FILE, JSON.stringify(credentials, null, 2));
 }
-
-
-// TEMP: test — remove this after
-ensureConfigDir();
-writeConfig({ defaultProvider: "claude" });
-writeCredentials({ claude: "test-key-123" });
-console.log(readConfig());
-console.log(readCredentials());
