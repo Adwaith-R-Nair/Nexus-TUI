@@ -2,6 +2,8 @@ import { Command } from "commander";
 import { readCredentials, readConfig } from "../utils/config";
 import { getProviderFunction } from "../utils/providers";
 import chalk from "chalk";
+import ora from "ora";
+import boxen from "boxen";
 
 export const agentCommand = new Command("agent")
   .description('Runs the agent')
@@ -24,13 +26,29 @@ export const agentCommand = new Command("agent")
       return;
     }
 
-    console.log(chalk.gray("Thinking..."));
+    const spinner = ora({
+      text: chalk.gray(`Thinking with ${config.defaultProvider}...`),
+      color: "cyan",
+    }).start();
 
     try {
       const chatFunction = getProviderFunction(config.defaultProvider);
       const result = await chatFunction({ prompt: options.prompt, apiKey });
-      console.log(chalk.cyan(result.text));
+
+      spinner.succeed(chalk.green("Response ready!"));
+
+      console.log(
+        boxen(result.text, {
+          padding: 1,
+          margin: 1,
+          borderColor: "cyan",
+          borderStyle: "round",
+          title: config.defaultProvider,
+          titleAlignment: "left",
+        })
+      );
     } catch (error) {
+      spinner.fail(chalk.red("Something went wrong"));
       console.log(chalk.red("Error: " + (error as Error).message));
     }
   });
