@@ -1,7 +1,6 @@
 import { Command } from "commander";
 import { readCredentials, readConfig } from "../utils/config";
-import { chatWithGemini } from "../utils/providers/gemini";
-import { chatWithClaude } from "../utils/providers/claude";
+import { getProviderFunction } from "../utils/providers";
 import chalk from "chalk";
 
 export const agentCommand = new Command("agent")
@@ -28,17 +27,8 @@ export const agentCommand = new Command("agent")
     console.log(chalk.gray("Thinking..."));
 
     try {
-      let result;
-
-      if (config.defaultProvider === "claude") {
-        result = await chatWithClaude({ prompt: options.prompt, apiKey });
-      } else if (config.defaultProvider === "gemini") {
-        result = await chatWithGemini({ prompt: options.prompt, apiKey });
-      } else {
-        console.log(chalk.red(`Unsupported provider: ${config.defaultProvider}`));
-        return;
-      }
-
+      const chatFunction = getProviderFunction(config.defaultProvider);
+      const result = await chatFunction({ prompt: options.prompt, apiKey });
       console.log(chalk.cyan(result.text));
     } catch (error) {
       console.log(chalk.red("Error: " + (error as Error).message));
