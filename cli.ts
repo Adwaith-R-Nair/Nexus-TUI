@@ -2,6 +2,7 @@ import { program } from 'commander';
 import { modelsCommand } from './commands/models';
 import { agentCommand } from './commands/agent';
 import { providerCommand } from './commands/providers';
+import { historyCommand } from './commands/history';
 import chalk from 'chalk';
 
 console.log(
@@ -22,6 +23,7 @@ program
   .version('0.1.0')
   .addCommand(modelsCommand)
   .addCommand(agentCommand)
-  .addCommand(providerCommand);
+  .addCommand(providerCommand)
+  .addCommand(historyCommand);
 
 program.parse();

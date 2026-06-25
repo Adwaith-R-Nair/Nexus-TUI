@@ -5,6 +5,7 @@ const CONFIG_DIR = join(process.env.HOME || "~", ".config", "nexus");
 
 const CONFIG_FILE = join(CONFIG_DIR, "config.json");
 const CREDENTIALS_FILE = join(CONFIG_DIR, "credentials.json");
+const HISTORY_FILE = join(CONFIG_DIR, "history.json");
 
 export type NexusConfig = {
     defaultProvider: string;
@@ -13,6 +14,14 @@ export type NexusConfig = {
 export type NexusCredentials = {
     [provider: string]: string;
 }
+
+export type HistoryEntry = {
+  id: string;
+  provider: string;
+  prompt: string;
+  response: string;
+  timestamp: string;
+};
 
 export function ensureConfigDir() {
   if (!existsSync(CONFIG_DIR)) {
@@ -46,4 +55,23 @@ export function readCredentials(): NexusCredentials {
 export function writeCredentials(credentials: NexusCredentials) {
   ensureConfigDir();
   writeFileSync(CREDENTIALS_FILE, JSON.stringify(credentials, null, 2));
+}
+
+export function readHistory(): HistoryEntry[] {
+  ensureConfigDir();
+  if (!existsSync(HISTORY_FILE)) {
+    return [];
+  }
+  const raw = readFileSync(HISTORY_FILE, "utf-8");
+  return JSON.parse(raw) as HistoryEntry[];
+}
+
+export function addHistoryEntry(entry: HistoryEntry) {
+  const history = readHistory();
+  history.push(entry);
+  writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2));
+}
+
+export function clearHistory() {
+  writeFileSync(HISTORY_FILE, JSON.stringify([], null, 2));
 }

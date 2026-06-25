@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import { readCredentials, readConfig } from "../utils/config";
+import { readCredentials, readConfig, addHistoryEntry } from "../utils/config";
 import { getProviderFunction } from "../utils/providers";
 import chalk from "chalk";
 import ora from "ora";
@@ -36,6 +36,14 @@ export const agentCommand = new Command("agent")
       const result = await chatFunction({ prompt: options.prompt, apiKey });
 
       spinner.succeed(chalk.green("Response ready!"));
+
+      addHistoryEntry({
+        id: Date.now().toString(),
+        provider: config.defaultProvider,
+        prompt: options.prompt,
+        response: result.text,
+        timestamp: new Date().toISOString(),
+      });
 
       console.log(
         boxen(result.text, {
