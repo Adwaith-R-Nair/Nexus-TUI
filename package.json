@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@inquirer/prompts": "^8.5.2",
     "@types/commander": "^2.12.5",
     "boxen": "^8.0.1",
     "chalk": "^5.6.2",

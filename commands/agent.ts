@@ -2,7 +2,7 @@ import { Command } from "commander";
 import { readCredentials, readConfig, addHistoryEntry } from "../utils/config";
 import { getProviderFunction } from "../utils/providers";
 import chalk from "chalk";
-import ora from "ora";
+import { spinner } from "../utils/spinner";
 import boxen from "boxen";
 
 export const agentCommand = new Command("agent")
@@ -26,10 +26,8 @@ export const agentCommand = new Command("agent")
       return;
     }
 
-    const spinner = ora({
-      text: chalk.gray(`Thinking with ${config.defaultProvider}...`),
-      color: "cyan",
-    }).start();
+    spinner.text = chalk.gray(`Thinking with ${config.defaultProvider}...`);
+    spinner.start();
 
     try {
       const chatFunction = getProviderFunction(config.defaultProvider);
