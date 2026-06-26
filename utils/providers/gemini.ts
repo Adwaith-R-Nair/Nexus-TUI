@@ -1,5 +1,5 @@
 import type { ChatRequest, ChatResponse } from "./types";
-import { executeReadFile, executeWriteFile } from "./tools";
+import { executeReadFile, executeWriteFile, executeListDirectory, executeRunCommand } from "./tools";
 
 const readFileFunctionDeclaration = {
   name: "read_file",
@@ -35,6 +35,36 @@ const writeFileFunctionDeclaration = {
   },
 };
 
+const listDirectoryFunctionDeclaration = {
+  name: "list_directory",
+  description: "List the files and folders inside a given directory path",
+  parameters: {
+    type: "object",
+    properties: {
+      path: {
+        type: "string",
+        description: "The relative or absolute path to the directory to list. Use '.' for the current directory.",
+      },
+    },
+    required: ["path"],
+  },
+};
+
+const runCommandFunctionDeclaration = {
+  name: "run_command",
+  description: "Run a shell command on the user's machine and return its output. Use this for tasks like running tests, checking versions, or git status. This is a sensitive action — call it directly, the system will handle user confirmation automatically.",
+  parameters: {
+    type: "object",
+    properties: {
+      command: {
+        type: "string",
+        description: "The exact shell command to execute",
+      },
+    },
+    required: ["command"],
+  },
+};
+
 export async function chatWithGemini(request: ChatRequest): Promise<ChatResponse> {
   const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
@@ -52,7 +82,7 @@ export async function chatWithGemini(request: ChatRequest): Promise<ChatResponse
       },
       body: JSON.stringify({
         contents,
-        tools: [{ functionDeclarations: [readFileFunctionDeclaration, writeFileFunctionDeclaration] }],
+        tools: [{ functionDeclarations: [readFileFunctionDeclaration, writeFileFunctionDeclaration, listDirectoryFunctionDeclaration, runCommandFunctionDeclaration,] }],
       }),
     });
 
@@ -79,6 +109,10 @@ export async function chatWithGemini(request: ChatRequest): Promise<ChatResponse
       toolResult = await executeReadFile(args);
     } else if (name === "write_file") {
       toolResult = await executeWriteFile(args);
+    } else if (name == "list_directory") {
+      toolResult = await executeListDirectory(args);
+    } else if (name == "run_command") {
+      toolResult = await executeRunCommand(args);
     } else {
       toolResult = `Unknown tool: ${name}`;
     }
