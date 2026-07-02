@@ -7,7 +7,7 @@ export async function chatWithOllama(request: ChatRequest): Promise<ChatResponse
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "gemma3:1b",
+      model: "qwen3:4b",
       prompt: request.prompt,
       stream: false,
     }),
