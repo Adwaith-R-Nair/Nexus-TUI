@@ -102,6 +102,18 @@ bun cli.ts history --clear   # delete all history
 
 ---
 
+### `interactive` — Launch interactive mode
+
+```bash
+bun cli.ts interactive
+# or shorthand:
+bun cli.ts i
+```
+
+Full keyboard-driven interface — no flags to memorize. Navigate with arrow keys, press Enter to select. Includes chat, history viewer, and provider management all in one menu.
+
+---
+
 ### `providers` — Manage provider credentials
 
 #### Login
@@ -150,7 +162,7 @@ When using Claude, Gemini, or OpenAI, the model can invoke tools to interact wit
 
 For tools that require approval, Nexus will show you exactly what the model wants to do and prompt you to confirm before anything is executed.
 
-> Ollama does not support tool use and returns a direct text response.
+> **Ollama:** Tool use is implemented but currently blocked by an upstream Ollama pipeline bug with `qwen3` tool call serialisation. Simple chat works fully.
 
 ---
 
@@ -174,6 +186,7 @@ tui/
 ├── commands/
 │   ├── agent.ts                  # `agent` command
 │   ├── history.ts                # `history` command
+│   ├── interactive.ts            # `interactive` command
 │   ├── models.ts                 # `models` command
 │   └── providers/
 │       ├── index.ts              # `providers` parent command
@@ -205,3 +218,5 @@ tui/
 | [boxen](https://github.com/sindresorhus/boxen) | Styled output boxes |
 | [ora](https://github.com/sindresorhus/ora) | Spinner while waiting for responses |
 | [@inquirer/prompts](https://github.com/SBoudrias/Inquirer.js) | Interactive confirmation prompts |
+
+> All provider integrations use raw `fetch()` against each provider's HTTP API directly — no official SDKs. This keeps the dependency footprint minimal and makes the request/response contract explicit.
