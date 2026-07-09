@@ -11,14 +11,14 @@
 
 **Your multi-provider AI powerhouse in the terminal.**
 
-Nexus is a CLI agent that lets you chat with Claude, Gemini, OpenAI, and Ollama from a single interface. Switch providers with one command, run agentic tool-use loops, and keep a persistent history of every conversation — all without leaving your terminal.
+Nexus is a CLI agent that lets you chat with Claude, Gemini, OpenAI, Ollama, and 400+ models via OpenRouter from a single interface. Switch providers with one command, run agentic tool-use loops, and keep a persistent history of every conversation — all without leaving your terminal.
 
 ---
 
 ## Features
 
-- **Multi-provider** — Claude, Gemini, OpenAI (gpt-4o-mini), and Ollama (local) out of the box
-- **Agentic tool use** — Claude, Gemini, and OpenAI providers can read files, write files, list directories, and run shell commands autonomously
+- **Multi-provider** — Claude, Gemini, OpenAI, Ollama (local), and OpenRouter (400+ models including free tier) out of the box
+- **Agentic tool use** — Claude, Gemini, OpenAI, and OpenRouter providers run a full agentic loop — reading files, writing files, listing directories, and running shell commands autonomously
 - **Human-in-the-loop safety** — file writes and shell commands require explicit approval before execution
 - **Persistent history** — every prompt and response is saved to `~/.config/nexus/history.json`
 - **Per-provider credentials** — API keys are stored locally in `~/.config/nexus/credentials.json`, never sent anywhere other than the respective provider
@@ -130,6 +130,22 @@ Saves an API key for the given provider and sets it as the default.
 | `gemini` | [aistudio.google.com](https://aistudio.google.com) |
 | `openai` | [platform.openai.com](https://platform.openai.com) |
 | `ollama` | No key needed — pass any value, e.g. `local` |
+| `openrouter` | [openrouter.ai](https://openrouter.ai) — free tier available, pass as `KEY\|model-id` |
+
+#### OpenRouter model selection
+
+Specify your model by appending it after a `|` separator:
+
+```bash
+# Auto free router — picks best available free model
+bun cli.ts providers login -p openrouter -a "sk-or-YOUR_KEY|openrouter/free"
+
+# Specific free model
+bun cli.ts providers login -p openrouter -a "sk-or-YOUR_KEY|meta-llama/llama-3.3-70b-instruct:free"
+
+# Paid model
+bun cli.ts providers login -p openrouter -a "sk-or-YOUR_KEY|anthropic/claude-haiku-4-5"
+```
 
 #### Set default
 
@@ -151,7 +167,7 @@ Removes the stored API key for that provider.
 
 ## Agentic Tools
 
-When using Claude, Gemini, or OpenAI, the model can invoke tools to interact with your local system. Each provider runs an agentic loop (up to 5 iterations) until it produces a final text response.
+When using Claude, Gemini, OpenAI or OpenRouter, the model can invoke tools to interact with your local system. Each provider runs an agentic loop (up to 5 iterations) until it produces a final text response.
 
 | Tool | What it does | Requires approval? |
 |---|---|---|
@@ -202,6 +218,7 @@ tui/
         ├── claude.ts             # Anthropic provider (tool use)
         ├── gemini.ts             # Google Gemini provider (tool use)
         ├── openai.ts             # OpenAI provider (tool use, Responses API)
+        ├── openrouter.ts         # OpenRouter provider (tool use, 400+ models)
         ├── ollama.ts             # Ollama local provider
         └── tools.ts              # Tool executors shared across providers
 ```
