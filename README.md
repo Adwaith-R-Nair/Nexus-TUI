@@ -178,7 +178,7 @@ When using Claude, Gemini, OpenAI or OpenRouter, the model can invoke tools to i
 
 For tools that require approval, Nexus will show you exactly what the model wants to do and prompt you to confirm before anything is executed.
 
-> **Ollama:** Tool use is implemented but currently blocked by an upstream Ollama pipeline bug with `qwen3` tool call serialisation. Simple chat works fully.
+> **Ollama:** Does not currently implement the agentic tool-use loop — `chatWithOllama` only calls the plain `/api/generate` chat endpoint. Simple chat works fully.
 
 ---
 
