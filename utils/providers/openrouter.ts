@@ -63,7 +63,9 @@ const tools = [
 
 export async function chatWithOpenRouter(request: ChatRequest): Promise<ChatResponse> {
 
-  const [apiKey, model = "openrouter/free"] = request.apiKey.split("|");
+  const [rawKey, rawModel] = request.apiKey.split("|");
+  const apiKey = rawKey.trim();
+  const model = rawModel?.trim() || "openrouter/free";
   const messages: any[] = [
     { role: "user", content: request.prompt }
   ];
@@ -94,24 +96,34 @@ export async function chatWithOpenRouter(request: ChatRequest): Promise<ChatResp
     const message = data.choices[0].message;
     const finishReason = data.choices[0].finish_reason;
 
-    if (finishReason !== "tool_calls") {
+    if (finishReason !== "tool_calls" || !message.tool_calls) {
       return { text: message.content || "(no response text)" };
     }
 
     messages.push(message);
 
     for (const call of message.tool_calls) {
-      const args = JSON.parse(call.function.arguments);
+      let args: any;
+      try {
+        args = JSON.parse(call.function.arguments);
+      } catch {
+        messages.push({
+          role: "tool",
+          tool_call_id: call.id,
+          content: `Error: could not parse tool arguments — malformed JSON from model`,
+        });
+        continue;
+      }
       let toolResult: string;
 
       if (call.function.name === "read_file") {
         toolResult = await executeReadFile(args);
       } else if (call.function.name === "write_file") {
-        toolResult = await executeWriteFile(args);
+        toolResult = await executeWriteFile(args, "OpenRouter");
       } else if (call.function.name === "list_directory") {
         toolResult = await executeListDirectory(args);
       } else if (call.function.name === "run_command") {
-        toolResult = await executeRunCommand(args);
+        toolResult = await executeRunCommand(args, "OpenRouter");
       } else {
         toolResult = `Unknown tool: ${call.function.name}`;
       }

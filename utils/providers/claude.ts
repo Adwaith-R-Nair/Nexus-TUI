@@ -96,11 +96,11 @@ export async function chatWithClaude(request: ChatRequest): Promise<ChatResponse
       if (block.name === "read_file") {
         toolResult = await executeReadFile(block.input);
       } else if (block.name === "write_file") {
-        toolResult = await executeWriteFile(block.input);
+        toolResult = await executeWriteFile(block.input, "Claude");
       } else if (block.name === "list_directory") {
         toolResult = await executeListDirectory(block.input);
       } else if (block.name === "run_command") {
-        toolResult = await executeRunCommand(block.input);
+        toolResult = await executeRunCommand(block.input, "Claude");
       } else {
         toolResult = `Unknown tool: ${block.name}`;
       }

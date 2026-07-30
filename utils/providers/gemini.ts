@@ -108,11 +108,11 @@ export async function chatWithGemini(request: ChatRequest): Promise<ChatResponse
     if (name === "read_file") {
       toolResult = await executeReadFile(args);
     } else if (name === "write_file") {
-      toolResult = await executeWriteFile(args);
+      toolResult = await executeWriteFile(args, "Gemini");
     } else if (name == "list_directory") {
       toolResult = await executeListDirectory(args);
     } else if (name == "run_command") {
-      toolResult = await executeRunCommand(args);
+      toolResult = await executeRunCommand(args, "Gemini");
     } else {
       toolResult = `Unknown tool: ${name}`;
     }

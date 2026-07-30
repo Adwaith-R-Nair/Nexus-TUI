@@ -13,11 +13,11 @@ export async function executeReadFile(input: { path: string }): Promise<string> 
   }
 }
 
-export async function executeWriteFile(input: { path: string; content: string }): Promise<string> {
+export async function executeWriteFile(input: { path: string; content: string }, providerName: string): Promise<string> {
   spinner.stop();
 
   console.log("");
-  console.log(chalk.yellow(`Gemini wants to write to: ${input.path}`));
+  console.log(chalk.yellow(`${providerName} wants to write to: ${input.path}`));
   console.log(chalk.gray("--- Content preview ---"));
   console.log(input.content);
   console.log(chalk.gray("------------------------"));
@@ -54,11 +54,11 @@ export async function executeListDirectory(input: { path : string}): Promise<str
   }
 }
 
-export async function executeRunCommand (input: { command: string }): Promise<string> {
+export async function executeRunCommand (input: { command: string }, providerName: string): Promise<string> {
   spinner.stop();
 
   console.log("");
-  console.log(chalk.red.bold(`Gemini wants to run a shell command:`));
+  console.log(chalk.red.bold(`${providerName} wants to run a shell command:`));
   console.log(chalk.red(`   ${input.command}`));
   console.log(chalk.yellow("This could modify or delete files, or do anything your account can do"));
 

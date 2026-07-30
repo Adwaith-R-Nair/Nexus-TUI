@@ -98,11 +98,11 @@ export async function chatWithOpenAI(request: ChatRequest): Promise<ChatResponse
       if (call.name === "read_file") {
         toolResult = await executeReadFile(args);
       } else if (call.name === "write_file") {
-        toolResult = await executeWriteFile(args);
+        toolResult = await executeWriteFile(args, "OpenAI");
       } else if (call.name === "list_directory") {
         toolResult = await executeListDirectory(args);
       } else if (call.name === "run_command") {
-        toolResult = await executeRunCommand(args);
+        toolResult = await executeRunCommand(args, "OpenAI");
       } else {
         toolResult = `Unknown tool: ${call.name}`;
       }

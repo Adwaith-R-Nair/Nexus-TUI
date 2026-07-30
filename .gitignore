@@ -15,3 +15,7 @@ Thumbs.db
 
 # VS Code
 .vscode/
+
+# Claude
+.claude/
+CLAUDE.md
